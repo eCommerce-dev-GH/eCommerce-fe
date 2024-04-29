@@ -1,0 +1,81 @@
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+public class EcommerceWebsiteTest {
+
+    @Test
+    public void testAddToCart() {
+        // Simulate adding a product to the cart
+        ShoppingCart cart = new ShoppingCart();
+        Product product = new Product("123", "Sample Product", 50.0);
+        cart.addProduct(product, 1);
+
+        // Verify that the product is added to the cart
+        assertTrue(cart.containsProduct(product));
+    }
+
+    @Test
+    public void testRemoveFromCart() {
+        // Simulate removing a product from the cart
+        ShoppingCart cart = new ShoppingCart();
+        Product product = new Product("123", "Sample Product", 50.0);
+        cart.addProduct(product, 1);
+        cart.removeProduct(product);
+
+        // Verify that the product is removed from the cart
+        assertFalse(cart.containsProduct(product));
+    }
+
+    @Test
+    public void testCalculateTotalPrice() {
+        // Simulate adding multiple products to the cart and calculate total price
+        ShoppingCart cart = new ShoppingCart();
+        Product product1 = new Product("123", "Product 1", 50.0);
+        Product product2 = new Product("456", "Product 2", 75.0);
+        cart.addProduct(product1, 2);
+        cart.addProduct(product2, 1);
+
+        // Verify that the total price is calculated correctly
+        assertEquals(175.0, cart.calculateTotalPrice(), 0.01);
+    }
+}
+
+class Product {
+    private String id;
+    private String name;
+    private double price;
+
+    public Product(String id, String name, double price) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+    }
+
+    // Getters and setters
+}
+
+class ShoppingCart {
+    private Map<Product, Integer> items = new HashMap<>();
+
+    public void addProduct(Product product, int quantity) {
+        items.put(product, items.getOrDefault(product, 0) + quantity);
+    }
+
+    public void removeProduct(Product product) {
+        items.remove(product);
+    }
+
+    public boolean containsProduct(Product product) {
+        return items.containsKey(product);
+    }
+
+    public double calculateTotalPrice() {
+        double totalPrice = 0.0;
+        for (Map.Entry<Product, Integer> entry : items.entrySet()) {
+            Product product = entry.getKey();
+            int quantity = entry.getValue();
+            totalPrice += product.getPrice() * quantity;
+        }
+        return totalPrice;
+    }
+}
